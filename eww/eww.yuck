@@ -1,0 +1,412 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;                      Bar Section                    ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defwindow bar
+  :monitor 0
+  :geometry (geometry :width "97.5%" :height "32px" :y "8px" :anchor "top center")
+  :stacking "bg" :windowtype "desktop" :wm-ignore false :background "#191919";
+  (bar)
+)
+
+(defpoll bar_date :interval "0.2s" "date '+%H:%M'")
+(defpoll workspaces :interval "0.2s" "sh $HOME/dotfiles/.config/eww/scripts/workspaces.sh")
+(defpoll player_data :interval "1s" "$HOME/dotfiles/.config/eww/scripts/spotify_get_song.sh")
+(defpoll spotify_run :interval "1s" "playerctl -l | grep -q spotify && echo true || echo false")
+(defpoll battery_level :interval "1s" "cat /sys/class/power_supply/BAT0/capacity")
+(defpoll battery_level_icon :interval "0.2s" "~/dotfiles/.config/eww/scripts/get_battery_level.sh")
+
+(defvar bar_volume_show false)
+(defvar bar_bright_show false)
+(defvar bar_tray_show false)
+(defvar bar_battery_show false)
+(defvar bar_cpu_show false)
+(defvar bar_laptop false)
+
+(defwidget bar []
+  (box :orientation "h"
+       :class "bar-container"
+       :space-evenly true
+    (left_bar) (empty_bar) (center_bar) (funny_bar) (right_bar))
+)
+
+(defwidget left_bar []
+  (box :orientation "h" :space-evenly "false" :halign "start" :spacing 8
+    (bar_time) (bar_volume) (bar_bright) (bar_tray)
+  )
+)
+
+(defwidget empty_bar [] (box))
+
+;; Use it for widget on the right
+(defwidget funny_bar []
+  (box  :orientation "h" :halign "end" :spacing 16
+    (bar_player)
+  )
+)
+
+(defwidget center_bar []
+  (box  :orientation "h" :space-evenly "true" :halign "center"
+    (bar_workspaces)
+  )
+)
+
+(defwidget right_bar []
+  (box  :orientation "h" :space-evenly "false" :halign "end" :spacing 16
+    (bar_battery :laptop bar_laptop) (bar_cpu)
+  )
+)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;                      Bar Widgets                    ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defwidget bar_workspaces []
+  (box :orientation "h" :class "bar-workspaces-container" :spacing 16 :halign "center" :valign "center"
+  (for ws in workspaces
+    (button :class "${ws.status}" :onclick "bspc desktop -f ${ws.name}")
+  ))
+)
+
+(defwidget bar_volume []
+  (eventbox :class "bar-reveable-hoverbox" :onhover "eww update bar_volume_show=true" :onhoverlost "eww update bar_volume_show=false"
+    (box :orientation "h" :space-evenly false
+      (button :class "bar-reveable-btn"
+        (label :class "bar-lb bar-lb-volume" :text "")
+      )
+      (revealer :class "bar-reveable-reveal" :transition "slideright" :reveal bar_volume_show :duration "550ms"
+        (box (scale :class "bar-reveable":orientation "h" :value volume :onchange "pactl set-sink-volume @DEFAULT_SINK@ {}%" :max 101 :min 0 ))
+      )
+    )
+  )
+)
+
+(defwidget bar_bright []
+  (eventbox :class "bar-reveable-hoverbox"
+            :onhover "eww update bar_bright_show=true"
+            :onhoverlost "eww update bar_bright_show=false"
+    (box :orientation "h"
+         :space-evenly false
+      (button :class "bar-reveable-btn"
+        (label :class "bar-lb bar-lb-bright" :text "󰃠")
+      )
+      (revealer :class "bar-reveable-reveal"
+                :transition "slideright"
+                :reveal bar_bright_show
+                :duration "550ms"
+      (box
+        (scale    :class "bar-reveable" 	  
+                  :orientation "h"      
+                  :max 101 
+                  :min 0 
+        )
+      )
+  ))))
+
+(defwidget bar_battery [?laptop]
+  (eventbox :class "bar-reveable-hoverbox"
+            :onhover "eww update bar_battery_show=true"
+            :onhoverlost "eww update bar_battery_show=false"
+            :visible {laptop}
+    (box :orientation "h"
+         :space-evenly false
+      (button :class "bar-reveable-btn"
+        (image
+          :path "./assets/${battery_level_icon}"
+          :image-width 20
+          :preserve-aspect-ratio false
+        )
+      )
+      (revealer :class "bar-reveable-reveal"
+                :transition "slideright"
+                :reveal bar_battery_show
+                :duration "550ms"
+      (box
+        (label
+          :text {laptop ? "${EWW_BATTERY.BAT0.capacity}%" : ""}
+        )
+  )))))
+
+;"
+(defwidget bar_player []
+  (box :class "spotify-bar-container" :orientation "h" :space-evenly true :visible {spotify_run}
+    (box :space-evenly "false"
+      (box :class "music-album-image" :vexpand false :hexpand false :halign "start" :style "background-image: url('./assets/player-imgs/${player_data.id}.jpg');")
+      (box :class "spotify-title-box" :orientation "v" :halign "start"
+        (label :class "player-label-title" :text "${player_data.title}" :halign "start" :limit-width 12)
+        (label :class "player-label-artist" :text "${player_data.artist}" :halign "start" :limit-width 12)
+      )
+    )
+    (box :orientation "h" :halign "end" :spacing 8
+      (button :class "player-control-btn" :onclick "playerctl previous"
+        (image :path "./assets/backward.svg" :image-width 18 :preserve-aspect-ratio false)
+      )
+      (button :class "player-control-btn" :onclick "playerctl play-pause"
+        (image :path "./assets/pause.svg" :image-width 24 :preserve-aspect-ratio false)
+      )
+      (button :class "player-control-btn" :onclick "playerctl next"
+        (image :path "./assets/forward.svg" :image-width 18 :preserve-aspect-ratio false)
+      )
+    )
+  )
+)
+
+; Right Bar
+
+(defwidget bar_cpu []
+  (eventbox :class "bar-reveable-hoverbox"
+    (box :orientation "h"
+         :space-evenly false
+      (button :class "bar-reveable-btn" :width 32 :height 32
+        (label :class "bar-lb" :text "" :tooltip "test")
+      )
+      (revealer :class "bar-reveable-reveal"
+                :transition "slideright"
+                :reveal bar_cpu_show
+                :duration "500ms"
+      (box
+        (label
+          :text "0"
+        )
+)))))
+
+(defwidget bar_disk []
+  (eventbox :class "bar-reveable-hoverbox"
+    (box :orientation "h"
+         :space-evenly false
+      (button :class "bar-reveable-btn" :width 32 :height 32
+        (label :class "bar-lb" :text "" :tooltip "test")
+      )
+      (revealer :class "bar-reveable-reveal"
+                :transition "slideright"
+                :reveal bar_cpu_show
+                :duration "500ms"
+      (box
+        (label
+          :text "0"
+        )
+)))))
+
+(defwidget bar_wifi []
+  (eventbox :class "bar-reveable-hoverbox"
+    (box :orientation "h"
+         :space-evenly false
+      (button :class "bar-reveable-btn" :width 32 :height 32
+        (label :class "bar-lb" :text "" :tooltip "test")
+      )
+      (revealer :class "bar-reveable-reveal"
+                :transition "slideright"
+                :reveal bar_cpu_show
+                :duration "500ms"
+      (box
+        (label
+          :text "0"
+        )
+)))))
+
+(defwidget bar_bluetooth []
+  (eventbox :class "bar-reveable-hoverbox"
+    (box :orientation "h"
+         :space-evenly false
+      (button :class "bar-reveable-btn" :width 32 :height 32
+        (label :class "bar-lb" :text "" :tooltip "test")
+      )
+      (revealer :class "bar-reveable-reveal"
+                :transition "slideright"
+                :reveal bar_cpu_show
+                :duration "500ms"
+      (box
+        (label
+          :text "0"
+        )
+)))))
+
+; Left Bar
+
+(defwidget bar_time []
+    (box :class "bar-time" :orientation "h"
+      (label :text "${bar_date}")
+ ))
+
+
+ (defwidget bar_tray []
+  (eventbox :class "bar-reveable-hoverbox"
+    (box :orientation "h"
+         :space-evenly false
+      (button :class "bar-reveable-btn tray" :onclick "eww update bar_tray_show=${!bar_tray_show}"
+        (label :class "bar-lb-tray bar-lb" :text "")
+      )
+      (revealer :class "bar-reveable-reveal"
+                :transition "slideright"
+                :reveal bar_tray_show
+                :duration "550ms"
+      (box :class "bar-tray-box"
+        (systray :spacing 12 :icon-size 12)
+      )
+  ))))
+
+; Power-menu
+(defwindow a_setting_closer
+  :monitor 0
+  :geometry (geometry :width "100%" :height "100%")
+  :stacking "fg"
+  :focusable false
+  :background "rgba(0,0,90,255)"
+(eventbox :onclick "eww close settings && eww close a_setting_closer" :halign "fill" :valign "fill")
+)
+
+(defwindow settings
+           :monitor 0
+           :geometry (geometry :x "-1.8%"
+                               :y "60px"
+                               :width "15%"
+                               :anchor "top right")
+           :stacking "fg"
+           :reserve (struts :distance "40px" :side "top")
+           :windowtype "dock"
+           :wm-ignore false
+           :background "#191919";
+(volume_slider)
+)
+
+(defpoll volume :interval "0.2s" "pamixer --get-volume")
+
+(defpoll brightness :interval "1s"
+"xrandr --verbose | grep -A 5 'eDP-1' | grep -i brightness | awk '{print $2 * 10}'")
+
+
+
+
+(defwidget volume_slider []
+  (box :class "display-centre" :valign "start" :orientation "vertical"
+    (box :class "slider-class" :spacing 16 :orientation "vertical"
+        :space-evenly false :hexpand false
+      (box :space-evenly false :class "volume-slider"
+        (eventbox :class "slider-volume-hover-box"
+          (label :text "")
+        )
+        (scale
+          :class "slider-scale"
+          :min 0
+          :max 101
+          :value volume
+          :onchange "pactl set-sink-volume @DEFAULT_SINK@ {}%"
+          :orientation "horizontal"
+          :hexpand true
+        )
+      )
+      (box :space-evenly false :class "bright-slider"
+        (eventbox :class "slider-bright-hover-box"
+          (label :text "")
+        )
+        (scale
+          :class "slider-scale"
+          :min 1
+          :value brightness
+          :max 11
+          :onchange "xrandr --output eDP-1 --brightness $(awk 'BEGIN {print {} / 10}') && echo $(awk 'BEGIN {print {} / 10}')"
+          :orientation "horizontal"
+          :hexpand true
+        )
+      )
+    )
+    
+    (box :class "button-class" :spacing 16
+        :space-evenly false
+        :valign "center" :halign "center"
+      (button :class "btn-power" :onclick "shutdown now"
+        (box :orientation "vertical" :halign "center" :valign "center"
+          (label :class "btn-label" :text "")
+        )
+      )
+      (button :class "btn-restart" :onclick "reboot"
+        (box :orientation "vertical" :halign "center" :valign "center"
+          (label :class "btn-label" :text "")
+        )
+      )
+      (button :class "btn-hib"
+        (box :orientation "vertical" :halign "center" :valign "center"
+          (label :class "btn-label" :text "")
+        )
+      )
+      (button :class "btn-logout" :onclick "bspc quit"
+        (box :orientation "vertical" :halign "center" :valign "center"
+          (label :class "btn-label" :text "")
+        )
+      )
+    )
+  )
+)
+
+
+(defwindow manager
+  :monitor 0
+  :geometry (geometry :width "300px" :y "72px" :x "5.5%":anchor "top left")
+  :stacking "bg" :windowtype "dock" :wm-ignore false :background "#191919";
+  (manager)
+)
+
+(defwidget manager []
+  (box :class "manager-window" :orientation "vertical" :space-evenly false
+    (box :class "mw-slidable" :orientation "vertical" :halign "left"
+      (manager-volume) (manager-brightness)
+    )
+    (box :class "mw-buttons" :orientation "horizontal" :halign "center" :spacing 16
+      (manager-internet) (manager-bluetooth)
+    )
+  )
+)
+
+(defwidget manager-internet []
+  (box :class "manager-clickable" :space-evenly false
+    (button :class "manager-button-clickable internet"
+      (image
+        :path "./assets/lan.svg"
+        :image-width 30
+        :preserve-aspect-ratio false
+      )
+    )
+  )
+)
+
+(defwidget manager-bluetooth []
+  (box :class "manager-clickable" :space-evenly false
+    (button :class "manager-button-clickable bluetooth"
+      (image
+        :path "./assets/bluetooth.svg"
+        :image-width 32
+        :preserve-aspect-ratio false
+      )
+    )
+  )
+)
+
+(defwidget manager-volume []
+  (box :class "manager-slidable" :space-evenly false
+    (button :class "manager-button-slidable"
+      (image
+        :path "./assets/volume.svg"
+        :image-width 20
+        :preserve-aspect-ratio false
+      )
+    )
+    (scale
+      :class "manager-slider" :min 0 :max 101 :value volume :onchange "pactl set-sink-volume @DEFAULT_SINK@ {}%" :orientation "horizontal" :hexpand true
+    )
+  )
+)
+
+(defwidget manager-brightness []
+  (box :class "manager-slidable" :space-evenly false
+    (button :class "manager-button-slidable"
+      (image
+        :path "./assets/bright.svg"
+        :image-width 20
+        :preserve-aspect-ratio false
+      )
+    )
+    (scale
+      :class "manager-slider" :min 0 :max 101 :onchange "" :orientation "horizontal" :hexpand true
+    )
+  )
+)

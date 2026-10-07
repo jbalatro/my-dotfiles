@@ -1,0 +1,16 @@
+num="$1"
+[ -z "$num" ] && exit 1
+
+current="$(bspc query -D -d focused)"
+
+if bspc query -D -d "$num" >/dev/null 2>&1; then
+    if [ -z "$(bspc query -N -d $current)" ]; then
+        bspc desktop $current -r
+    fi
+else
+    if [ -z "$(bspc query -N -d $current)" ]; then
+        bspc desktop $current -r
+    fi
+    bspc monitor -a "$num"
+fi
+bspc desktop "$num" --focus

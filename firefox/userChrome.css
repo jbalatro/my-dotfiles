@@ -1,0 +1,260 @@
+/* happybar rice for Firefox: floating pill tabs, capsule toolbar, no menu bar.
+   Colors follow the system light/dark scheme, which mango's wallpaper.sh switches:
+     system light -> dark capsule with light pills   (the bar's light mode)
+     system dark  -> cream capsule with dark pills   (the bar's dark mode)        */
+
+:root {
+  --radius: 32px;
+  --gap: 8px;
+  --t: 0.2s;
+
+  --bar: #101014;
+  --bar-ink: #f2efef;
+  --pill: #d3cfcf;
+  --pill-hover: #e6e2e2;
+  --pill-dim: #bdb8b8;
+  --ink: #101014;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bar: #e9e6df;
+    --bar-ink: #101014;
+    --pill: #101014;
+    --pill-hover: #2e2e35;
+    --pill-dim: #26262c;
+    --ink: #e9e6df;
+  }
+}
+
+/* ---- transparent window, no menu bar / window buttons ---- */
+:root,
+window,
+#main-window,
+#navigator-toolbox,
+#titlebar,
+#TabsToolbar,
+.browser-titlebar,
+.browser-toolbox-background,
+#navigator-toolbox-background,
+#browser-panel,
+#sidebar-box,
+#browser {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  appearance: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* whatever sits directly under the window paints an opaque fill; clear it (not popups) */
+#main-window > *:not(panel):not(menupopup):not(tooltip) {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+#toolbar-menubar,
+.titlebar-buttonbox-container,
+.titlebar-spacer {
+  display: none !important;
+}
+
+/* ---- floating tabs ---- */
+#TabsToolbar {
+  margin: var(--gap) var(--gap) 0 !important;
+  padding: 0 !important;
+}
+
+#tabbrowser-tabs {
+  border: none !important;
+  margin: 0 !important;
+}
+
+.tabbrowser-tab {
+  padding: 0 2px !important;
+}
+
+.tab-background {
+  background: var(--pill-dim) !important;
+  border: none !important;
+  border-radius: var(--radius) !important;
+  box-shadow: none !important;
+  margin-block: 0 !important;
+  transition: background var(--t);
+}
+
+.tabbrowser-tab:hover > .tab-stack > .tab-background {
+  background: var(--pill-hover) !important;
+}
+
+.tabbrowser-tab[selected] > .tab-stack > .tab-background {
+  background: var(--pill) !important;
+}
+
+.tab-label,
+.tab-close-button,
+.tab-icon-overlay {
+  color: var(--ink) !important;
+  fill: var(--ink) !important;
+}
+
+.tab-close-button {
+  border-radius: var(--radius) !important;
+  transition: background var(--t);
+}
+
+.tab-close-button:hover {
+  background: color-mix(in srgb, var(--ink) 18%, transparent) !important;
+}
+
+#tabs-newtab-button,
+#new-tab-button,
+#alltabs-button,
+#scrollbutton-up,
+#scrollbutton-down {
+  --toolbarbutton-icon-fill: var(--ink);
+  background: var(--pill) !important;
+  border-radius: var(--radius) !important;
+  width: 36px !important;
+  height: 36px !important;
+  padding: 0 !important;
+  margin: 0 4px !important;
+  transition: background var(--t);
+}
+
+#tabs-newtab-button:hover,
+#new-tab-button:hover,
+#alltabs-button:hover {
+  background: var(--pill-hover) !important;
+}
+
+/* ---- capsule toolbar ---- */
+#nav-bar {
+  background: var(--bar) !important;
+  border: none !important;
+  border-radius: var(--radius) !important;
+  box-shadow: none !important;
+  margin: var(--gap) var(--gap) 0 !important;
+  padding: 4px 6px !important;
+}
+
+#nav-bar toolbarbutton {
+  --toolbarbutton-icon-fill: var(--ink);
+  background: var(--pill) !important;
+  border-radius: var(--radius) !important;
+  width: 36px !important;
+  height: 36px !important;
+  padding: 0 !important;
+  margin: 0 2px !important;
+  transition: background var(--t);
+}
+
+#nav-bar toolbarbutton:hover {
+  background: var(--pill-hover) !important;
+}
+
+#nav-bar toolbarbutton > .toolbarbutton-icon,
+#nav-bar toolbarbutton > .toolbarbutton-badge-stack {
+  background: transparent !important;
+}
+
+/* address bar */
+#urlbar-container {
+  padding: 0 !important;
+  margin: 0 6px !important;
+}
+
+#urlbar {
+  background: var(--pill) !important;
+  border-radius: var(--radius) !important;
+  transition: background var(--t);
+}
+
+#urlbar:hover,
+#urlbar[focused] {
+  background: var(--pill-hover) !important;
+}
+
+#urlbar-background {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+#urlbar,
+#urlbar-input,
+.urlbar-input {
+  color: var(--ink) !important;
+}
+
+#urlbar .urlbar-input-box {
+  margin-left: 12px;
+}
+
+#urlbar-searchmode-switcher {
+  display: none !important;
+}
+
+#urlbar .urlbarView-url,
+#urlbar .urlbarView-title {
+  color: var(--ink);
+}
+
+/* suggestions dropdown */
+.urlbarView {
+  background: var(--bar) !important;
+  border-radius: var(--radius) !important;
+  margin-top: var(--gap) !important;
+  padding: 6px !important;
+  box-shadow: none !important;
+}
+
+.urlbarView-body-inner {
+  border: none !important;
+}
+
+.urlbarView-row {
+  border-radius: 24px !important;
+  color: var(--bar-ink);
+}
+
+.urlbarView-row:hover > .urlbarView-row-inner,
+.urlbarView-row[selected] > .urlbarView-row-inner {
+  background: color-mix(in srgb, var(--bar-ink) 14%, transparent) !important;
+}
+
+.urlbarView-title,
+.urlbarView-url,
+.urlbarView-action {
+  color: var(--bar-ink) !important;
+}
+
+/* ---- bookmarks bar ---- */
+#PersonalToolbar {
+  background: var(--bar) !important;
+  border: none !important;
+  border-radius: var(--radius) !important;
+  margin: var(--gap) var(--gap) 0 !important;
+  padding: 2px 8px !important;
+}
+
+#PersonalToolbar toolbarbutton,
+#PersonalToolbar .bookmark-item {
+  color: var(--bar-ink) !important;
+  --toolbarbutton-icon-fill: var(--bar-ink);
+}
+
+/* ---- rounded floating page ---- */
+#tabbrowser-tabbox,
+#tabbrowser-tabpanels,
+#appcontent {
+  background: transparent !important;
+}
+
+#tabbrowser-tabpanels {
+  margin: var(--gap) !important;
+  border-radius: var(--radius) !important;
+  overflow: hidden !important;
+}

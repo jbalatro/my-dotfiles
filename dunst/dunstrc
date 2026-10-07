@@ -1,0 +1,31 @@
+[global]
+    monitor = 0
+    width = 300
+    format = "<b>%a</b>\n%s"
+    corner_radius = 16
+    gap_size = 8
+
+[urgency_low]
+    background = "#222222"
+    frame_width = 2
+    frame_color = "#104778"
+    timeout = 5
+
+[urgency_normal]
+    background = "#222222"
+    frame_width = 2
+    frame_color = "#8c650f"
+    timeout = 5
+
+[urgency_critical]
+    background = "#222222"
+    frame_width = 2
+    frame_color = "#801709"
+    timeout = 10
+
+[spotify]
+    appname = "Spotify"
+    background = "#222222"
+    frame_width = 2
+    frame_color = "#1DB954"
+    critical = 3

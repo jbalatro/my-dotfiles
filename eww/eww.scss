@@ -1,0 +1,424 @@
+$bg-color: #191919;
+$light-grey: #a3a3a3; 
+$dark-grey: #424242; 
+$spotify-green: #1ed760;
+$font-used: "JetBrainsMono Nerd Font";
+
+/* BAR */
+
+* {
+    all: unset;
+    font-family: $font-used;
+}
+/* BAR-TRAY */
+.bar-tray {
+    background-color: $dark-grey;
+    padding: 0 16px;
+    border-radius: 32px;
+}
+
+.settings { 
+    background-color: $bg-color;
+}
+
+.a_setting_closer { 
+    background-color: transparent;
+    all: unset
+}
+
+.spotify-bar-container {
+    background-color: $spotify-green;
+    color: $bg-color;
+    font-weight: bold;
+    border-radius: 32px;
+    padding: 0 4px;
+    min-width: 350px;
+}
+
+
+
+.spotify-title-box {
+    font-size: 14px;
+}
+
+.player-label-artist {
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.player-label-title {
+    font-weight: bold
+}
+
+.left_bar {
+    background-color: #1ed760;
+}
+
+.player-control-btn {
+    all: unset;
+    transition: 0.2s;
+}
+
+.player-control-btn:hover{
+    opacity: 0.5
+}
+
+.music-album-image {
+    background-size: 32px;
+    margin: 4px 8px 4px 0;
+    min-height: 32px;
+    min-width: 32px;
+    background-color: #000000;
+    border-radius: 32px;
+}
+
+.systray {
+    background-color: #ffffff;
+}
+
+.bar-container {
+    all: unset;
+    background-color: $bg-color;
+    border-radius: 16px;
+    padding: 8px;
+}
+
+.bar-informational-hoverbox box,
+.bar-informational-hoverbox box > button {
+    all: unset;
+    background-color:$light-grey;
+}
+
+.bar-informational-hoverbox box {
+    padding: 0 12px;
+    border-radius: 32px;
+    color: #000000;
+}
+
+.bar-container .bar-left,
+.bar-container .bar-center,
+.bar-container .bar-right {
+
+    border-radius: 32px;
+
+}
+
+.bar-date-label {
+    padding: 8px 16px;
+    background-color:$light-grey;
+    margin-left: 8px;
+    border-radius: 32px;
+    color: $bg-color;
+    font-weight: bold;
+}
+
+.bar-reveable {
+    min-width: 90px;
+    padding: 16px;
+    color: $bg-color;
+}
+
+.bar-reveable-hoverbox {
+    button {
+        all: unset;
+    }
+
+    .bar-reveable-btn {
+        all: unset;
+        background-color: transparent;
+        min-width: 32px;
+        min-height: 32px;
+        border-radius: 32px;
+
+        .bar-lb {
+            all: unset;
+            font-size: 24px;
+            color: $light-grey;
+        }
+
+        .bar-lb-tray, .bar-lb-volume, .bar-lb-bright {
+            transition: 0.25s;
+        }
+
+        &:hover > .bar-lb-tray {
+            color: #bb6565;
+        }
+
+        &:hover > .bar-lb-volume {
+            color: #6cbb65;
+        }
+
+        &:hover > .bar-lb-bright {
+            color: #f3e95b;
+        }
+    }
+
+    .bar-tray-box {
+        margin-left: 16px;
+    }
+
+    scale trough {
+        border-radius: 32px;
+        background-color: #2e2e2e;
+        margin: 0;
+        min-height: 6px;
+    }
+    
+    scale highlight {
+        border-radius: 32px;
+        background-color: #919191;
+    }
+    
+    scale slider {
+        all:unset;
+    }
+}
+
+
+
+
+.bar-time {
+    background-color:$light-grey;
+    border-radius: 32px;
+    padding: 0 24px;
+    color: $bg-color;
+    font-weight: bold;
+    font-family: $font-used;
+}
+
+$ws-btn-sz: 28px;
+$ws-focus-color: #9e9e9e;
+$ws-empty-color: #585858;
+$ws-occupied-color: #585858;
+
+.bar-workspaces-container {
+    button {
+        all: unset;
+        min-width: $ws-btn-sz;
+        min-height: $ws-btn-sz;
+        border-radius: 32px;
+        transition: 0.5s;
+    }
+
+    .focused {
+        background-color: $ws-focus-color;
+        padding: 0;
+    }
+
+    .occupied {
+        background-color: $ws-empty-color;
+    }
+
+    .empty {
+        background-color: $ws-occupied-color;
+    }
+}
+
+
+scale {
+    all: unset;
+}
+
+label {
+    all: unset;
+}
+
+
+.slider-class {
+    margin-top: 10px;
+}
+
+.button-class {
+    margin-top: 10px;
+}
+
+.slider-scale {
+    margin-right: 16px;
+    margin-left: 16px;
+}
+
+.slider-scale trough {
+    background-color: #333333;
+}
+
+.slider-scale highlight {
+    background-color: #444444;
+    min-height: 8px;
+    border-radius: 32px;
+}
+
+.slider-scale slider {
+    background-color: #555555;
+    border: none;
+}
+
+.slider-class label {
+    font-family: "Material Icons";
+    font-size: 20px;
+    margin-left: 12px;
+}
+
+.slider-label {
+    font-family: "Material Icons";
+    margin-left: 12px;
+    font-size: 20px;
+}
+
+.btn-label {
+    font-family: "Material Icons";
+    font-size: 20px;
+    min-width: 20px;
+}
+
+.btn-power:hover {
+    background-color: #b14646;
+}
+
+.btn-restart:hover {
+    background-color: #e67c3e;
+}
+
+.volume-slider .slider-scale slider, 
+.volume-slider .slider-scale trough, 
+.volume-slider .slider-scale highlight,
+.slider-volume-hover-box {
+    transition: 0.2s
+}
+
+.bright-slider .slider-scale slider, 
+.bright-slider .slider-scale trough, 
+.bright-slider .slider-scale highlight,
+.slider-bright-hover-box {
+    transition: 0.2s
+}
+
+.volume-slider .slider-volume-hover-box:hover,
+.volume-slider .slider-scale:hover + .slider-volume-hover-box {
+    color: #448daf;
+}
+
+.volume-slider .slider-scale:hover slider,
+.volume-slider .slider-volume-hover-box:hover + .slider-scale slider{
+    background-color: #56b2dd;
+}
+
+.volume-slider .slider-scale:hover highlight,
+.volume-slider .slider-volume-hover-box:hover + .slider-scale highlight {
+    background-color: #458aaa;
+}
+
+.volume-slider .slider-scale:hover trough,
+.volume-slider .slider-volume-hover-box:hover + .slider-scale trough {
+    background-color: #356d86;
+}
+
+.bright-slider .slider-bright-hover-box:hover,
+.bright-slider .slider-scale:hover + .slider-bright-hover-box {
+    color: #b68b2f;
+}
+
+.bright-slider .slider-scale:hover slider,
+.bright-slider .slider-bright-hover-box:hover + .slider-scale slider{
+    background-color: #ddb256;
+}
+
+.bright-slider .slider-scale:hover highlight,
+.bright-slider .slider-bright-hover-box:hover + .slider-scale highlight {
+    background-color: #bb9440;
+}
+
+.bright-slider .slider-scale:hover trough,
+.bright-slider .slider-bright-hover-box:hover + .slider-scale trough {
+    background-color: #9e7a2b;
+}
+
+.btn-hib:hover {
+    background-color: #6681b9;
+}
+
+.btn-logout:hover {
+    background-color: #e63e76;
+}
+
+.button-class {
+    margin-bottom: 16px;
+    font-family: "Material Icons";
+}
+
+.manager-window {
+    background-color: $bg-color;
+    padding: 16px;
+}
+
+.manager-button-slidable {
+    all: unset;
+    background-color: $light-grey;
+    border-radius: 32px;
+    min-width: 40px;
+    min-height: 40px;
+    margin-right: 12px;
+    transition: 0.25s;
+}
+
+.manager-button-slidable:hover {
+    transition: 0.25s;
+    opacity: 0.5;
+}
+
+.manager-slidable {
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+.manager-slidable {
+    slider {
+        all: unset;
+        background-color: transparent;
+        padding: 4px;
+        border-radius: 0px;
+    }
+
+    trough {
+        all:unset;
+        background-color: $dark-grey;
+        border-radius: 32px;
+        
+    }
+
+    highlight {
+        all:unset;
+        background-color: $light-grey;
+        border-radius: 32px;
+    }
+}
+
+//.volume-slider .slider-scale trough, 
+//.volume-slider .slider-scale highlight,
+
+.manager-button-clickable {
+    all:unset;
+    min-width: 40px;
+    min-height: 40px;
+    background-color: #1ed760;
+    border-radius: 32px;
+    padding: 4px;
+    transition: 0.25s;
+}
+
+.manager-button-clickable:hover {
+    opacity: 0.5;
+    transition: 0.25s;
+
+}
+
+.mw-buttons {
+    margin-top: 16px;
+}
+
+.bluetooth {
+    background-color: #356d86;
+}
+
+.internet {
+    background-color: #3fb67a;
+}
