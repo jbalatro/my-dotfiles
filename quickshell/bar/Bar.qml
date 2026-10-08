@@ -62,6 +62,11 @@ Scope {
 				SystrayWidget {}
 			}
 
+			WorkspacesWidget {
+				anchors.centerIn: parent
+				monitor: my_bar.screen ? my_bar.screen.name : ""
+			}
+
 			Row {
 				id: rightContentRow
 				anchors.right: parent.right
